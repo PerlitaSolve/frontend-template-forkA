@@ -1,6 +1,9 @@
 import { api } from '../services/api';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Loader } from 'lucide-react';
 
-const login = () => {
+const Login = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [password, setPassword] = useState('');
@@ -9,6 +12,9 @@ const login = () => {
     const navigate = useNavigate();
 
     const entrar = async () => {
+        setLoading(true);
+        setError('');
+
         try {
             const data = await api.post('/auth/login', {email,password});
             localStorage.setItem('token', data.token);
@@ -28,13 +34,15 @@ const login = () => {
     );
 
   return (
-     <div>
+     <div className="login-container">
         <h2 className="login-title">INICIO DE SESIÓN</h2>
-        <input type="text" placeholder ="Usuario" className= "login-input"/>
-        <input type="password" placeholder ="Contraseña" className= "login-input"/>
+
+        <input type = "email" placeholder="Correo" className="login-input" value={email} onChange={(e)=> setEmail(e.target.value)} />
+        <input type = "password" placeholder="Contraseña" className="login-input" value={password} onChange={(e)=> setPassword(e.target.value)} />
+    
         <button className="login-button" onClick={entrar}>Entrar</button>
      </div>
   );
 };
 
-export default login;
+export default Login;

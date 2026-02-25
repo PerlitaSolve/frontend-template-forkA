@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './components/layout/Layout';
 import Productos from './pages/Productos';
-import login from './pages/login';
+import Login from './pages/login';
 
 const Dashboard = () => (
   <div>
@@ -14,19 +14,22 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Rutas públicas(sin layout)*/}
-          <Route path="/login" element={<login />} /></Routes>
+        {/* Rutas publicas (sin layout) */}
+        <Route path="/login" element= {<Login />}></Route>
+        <Route path='/*' element={
+            <Layout>
+              <Routes>
+                {/* Rutas privadas (con layout) */}
+                <Route path="/" element={<Navigate to="/login" replace />} />
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/productos" element={<Productos />} />
+              </Routes>
+            </Layout>
+        }></Route>
+
         
-      <Routes path="/" element={
-        <Layout>
-          <Routes>
-            {/* rutas privadas (con layout) */}
-            <Route path="/" element={<Navigate to="/login" replace />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/productos" element={<Productos />} />
-          </Routes>
-        </Layout>
-      }></Routes>
+        {/* El Layout envuelve todas las rutas */}
+        </Routes>
     </BrowserRouter>
   );
 }
