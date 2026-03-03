@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './components/layout/Layout';
 import Productos from './pages/Productos';
 import Login from './pages/login';
+import ProtectedRoute from './components/layout/ProtectedRoute';
 
 const Dashboard = () => (
   <div>
@@ -16,19 +17,22 @@ function App() {
       <Routes>
         {/* Rutas publicas (sin layout) */}
         <Route path="/login" element= {<Login />}></Route>
-        <Route path='/*' element={
-            <Layout>
+
+
+        <Route element ={<ProtectedRoute />}>
+          
+          <Route path='/*' element={
+            <Layout>  {/* El Layout envuelve todas las rutas */}
               <Routes>
                 {/* Rutas privadas (con layout) */}
-                <Route path="/" element={<Navigate to="/login" replace />} />
+                <Route path="/" element={<Navigate to="/dashboard" replace />} />
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/productos" element={<Productos />} />
               </Routes>
             </Layout>
-        }></Route>
+          }></Route>
 
-        
-        {/* El Layout envuelve todas las rutas */}
+        </Route>
         </Routes>
     </BrowserRouter>
   );
