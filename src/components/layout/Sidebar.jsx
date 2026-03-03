@@ -1,5 +1,6 @@
 import { NavLink } from 'react-router-dom';
 import { LayoutDashboard, ShoppingBag, Users, LogOut } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const Sidebar = () => {
   const linkClass = ({ isActive }) =>
@@ -8,6 +9,13 @@ const Sidebar = () => {
         ? 'bg-blue-600 text-white shadow-md' 
         : 'text-slate-400 hover:bg-slate-800 hover:text-white'
     }`;
+
+    const navigate = useNavigate();
+
+    const salir = () => {
+      localStorage.removeItem('token');
+       navigate ('/login');
+    };
 
   return (
     <div className="w-64 h-screen bg-slate-900 text-white fixed left-0 top-0 flex flex-col shadow-xl z-50">
@@ -31,7 +39,7 @@ const Sidebar = () => {
 
       {/* Footer */}
       <div className="p-4 border-t border-slate-700">
-        <button className="flex items-center gap-3 text-red-400 hover:text-red-300 hover:bg-slate-800 w-full px-4 py-3 rounded-lg transition">
+        <button onClick={salir} className="flex items-center gap-3 text-red-400 hover:text-red-300 hover:bg-slate-800 w-full px-4 py-3 rounded-lg transition">
           <LogOut size={20} /> Salir
         </button>
       </div>
