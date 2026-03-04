@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
 import { api } from '../services/api';
 import { ShoppingBag, Loader, AlertCircle } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const Productos = () => {
   const [productos, setProductos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     cargarProductos();
@@ -19,6 +21,17 @@ const Productos = () => {
       setError("No se pudo conectar con el servidor. ¿Está encendido?");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const crearProducto= async ()=>{
+    try{
+     const nuevo = await api.post('/productos/crear');
+      setProductos([nuevo]);
+    }catch(err){
+      console.error(err);
+      setError("Error al crear producto");
+      navigate('/productos');
     }
   };
 
@@ -40,10 +53,23 @@ const Productos = () => {
         <h1 className="text-3xl font-bold text-slate-800 flex items-center gap-2">
           <ShoppingBag className="text-blue-600" /> Inventario
         </h1>
+        
         <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-semibold">
           {productos.length} items
         </span>
       </header>
+
+      
+      <input type="text" placeholder="nombre del producto" className="border border-slate-300 rounded-lg px-4 py-2 w-1/3 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+      <input type="text" placeholder="precio" className="border border-slate-300 rounded-lg px-4 py-2 w-1/6 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+      <input type="text" placeholder="stock" className="border border-slate-300 rounded-lg px-4 py-2 w-1/6 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+      <input type="text" placeholder="id categoria" className="border border-slate-300 rounded-lg px-4 py-2 w-1/6 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+      <input type="text" placeholder="descripcion" className="border border-slate-300 rounded-lg px-4 py-2 w-1/2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+      <input type="text" placeholder="url imagen" className="border border-slate-300 rounded-lg px-4 py-2 w-1/3 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+      <button onClick={crearProducto} className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition">
+        Crear Producto
+      </button>
+
 
       {/* Grid Responsivo: 1 col móvil, 2 tablet, 3 desktop */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
