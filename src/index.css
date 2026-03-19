@@ -5,3 +5,13 @@
 body {
   @apply bg-slate-50 text-slate-900;
 }
+
+.login-container {
+  @apply flex items-center justify-center min-h-screen;
+  background-color: rgb(182, 178, 178);
+  padding: 40px;
+  border-radius: 15px;
+  width: 100%;
+  
+}
+

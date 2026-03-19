@@ -25,13 +25,25 @@ const Productos = () => {
   };
 
   const crearProducto= async ()=>{
+    console.log('Boton presionado');
+    const nombre = document.getElementById('nombre').value;
+    const precio = document.getElementById('precio').value;
+    const stock = document.getElementById('stock').value;
+    const id_categoria = document.getElementById('id_categoria').value;
+    const descripcion = document.getElementById('descripcion').value;
+    const imagen_url = document.getElementById('imagen_url').value;
+    const youtube_id = document.getElementById('youtube_id').value;
+    console.log(nombre, precio, stock, id_categoria, descripcion, imagen_url, youtube_id);
+    console.log('datos cargados en el objeto');
     try{
-     const nuevo = await api.post('/productos/crear');
-      setProductos([nuevo]);
+      
+     const nuevo = await api.post('/productos/crear', {nombre: nombre, precio: precio, stock: stock, id_categoria: id_categoria, descripcion: descripcion, imagen_url: imagen_url, youtube_id: youtube_id});
+     
+     console.log(nuevo);
     }catch(err){
-      console.error(err);
+      console.log(err);
       setError("Error al crear producto");
-      navigate('/productos');
+     // navigate('/productos');
     }
   };
 
@@ -60,12 +72,13 @@ const Productos = () => {
       </header>
 
       
-      <input type="text" placeholder="nombre del producto" className="border border-slate-300 rounded-lg px-4 py-2 w-1/3 focus:outline-none focus:ring-2 focus:ring-blue-500" />
-      <input type="text" placeholder="precio" className="border border-slate-300 rounded-lg px-4 py-2 w-1/6 focus:outline-none focus:ring-2 focus:ring-blue-500" />
-      <input type="text" placeholder="stock" className="border border-slate-300 rounded-lg px-4 py-2 w-1/6 focus:outline-none focus:ring-2 focus:ring-blue-500" />
-      <input type="text" placeholder="id categoria" className="border border-slate-300 rounded-lg px-4 py-2 w-1/6 focus:outline-none focus:ring-2 focus:ring-blue-500" />
-      <input type="text" placeholder="descripcion" className="border border-slate-300 rounded-lg px-4 py-2 w-1/2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
-      <input type="text" placeholder="url imagen" className="border border-slate-300 rounded-lg px-4 py-2 w-1/3 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+      <input type="text" placeholder="nombre del producto" className="border border-slate-300 rounded-lg px-4 py-2 w-1/3 focus:outline-none focus:ring-2 focus:ring-blue-500" id="nombre" />
+      <input type="text" placeholder="precio" className="border border-slate-300 rounded-lg px-4 py-2 w-1/6 focus:outline-none focus:ring-2 focus:ring-blue-500" id="precio" />
+      <input type="text" placeholder="stock" className="border border-slate-300 rounded-lg px-4 py-2 w-1/6 focus:outline-none focus:ring-2 focus:ring-blue-500" id="stock" />
+      <input type="text" placeholder="id categoria" className="border border-slate-300 rounded-lg px-4 py-2 w-1/6 focus:outline-none focus:ring-2 focus:ring-blue-500" id="id_categoria" />
+      <input type="text" placeholder="descripcion" className="border border-slate-300 rounded-lg px-4 py-2 w-1/2 focus:outline-none focus:ring-2 focus:ring-blue-500" id="descripcion" />
+      <input type="text" placeholder="url imagen" className="border border-slate-300 rounded-lg px-4 py-2 w-1/3 focus:outline-none focus:ring-2 focus:ring-blue-500" id="imagen_url" />
+      <input type="text" placeholder="youtube id" className="border border-slate-300 rounded-lg px-4 py-2 w-1/3 focus:outline-none focus:ring-2 focus:ring-blue-500" id="youtube_id" />
       <button onClick={crearProducto} className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition">
         Crear Producto
       </button>
@@ -79,11 +92,12 @@ const Productos = () => {
             
             {/* Imagen del producto */}
             <div className="h-48 p-4 bg-white flex items-center justify-center border-b border-slate-50">
-              <img 
-                src={prod.imagen_url || "https://via.placeholder.com/150"} 
-                alt={prod.nombre} 
-                className="max-h-full object-contain"
-              />
+
+              {prod.youtube_id ? (
+                <iframe width="100%" height= "100%" src={`https://www.youtube.com/embed/${prod.youtube_id}`} title="Youtube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
+              ) : (
+                <img src={prod.imagen_url || "https://via.placeholder.com/150"} alt={prod.nombre} className="max-h-full object-contain"/>
+              )}
             </div>
 
             {/* Cuerpo de la tarjeta */}

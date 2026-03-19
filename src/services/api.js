@@ -6,7 +6,7 @@ export const api = {
     try {
       const response = await fetch(`${API_URL}${endpoint}`, {
       headers:{
-        'Authorizathion': token? `Bearer ${token}`: '',
+        'Authorization': token? `Bearer ${token}`: '',
         'Content-Type':  'application/json'
       },
     });
@@ -24,11 +24,13 @@ export const api = {
     try {
       const response = await fetch(`${API_URL}${endpoint}`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json',
-            'Authorizathion': token? `Bearer ${token}`: '',
+        headers: {
+           'Content-Type': 'application/json',
+            'Authorization': token ? `Bearer ${token}`: '',
          }, //agrea autorizacion   true? '': ''/  'authorization': token? 'Bearer:' +token: ''
         body: JSON.stringify(body)
       });
+      console.log('Respuesta del servidor:', response);
       if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
       return await response.json();
     } catch (error) {
