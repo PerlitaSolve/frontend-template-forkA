@@ -36,7 +36,7 @@ const Productos = () => {
     console.log(nombre, precio, stock, id_categoria, descripcion, imagen_url, youtube_id);
     console.log('datos cargados en el objeto');
     try{
-      
+      console.log('Intentando crear producto');
      const nuevo = await api.post('/productos/crear', {nombre: nombre, precio: precio, stock: stock, id_categoria: id_categoria, descripcion: descripcion, imagen_url: imagen_url, youtube_id: youtube_id});
      
      console.log(nuevo);

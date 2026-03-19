@@ -22,6 +22,7 @@ export const api = {
   post: async (endpoint, body) => {
     const token = localStorage.getItem('token');
     try {
+      console.log('Enviando datos al servidor:', body);
       const response = await fetch(`${API_URL}${endpoint}`, {
         method: 'POST',
         headers: {
