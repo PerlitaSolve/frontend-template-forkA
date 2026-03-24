@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { api } from '../services/api';
 import { ShoppingBag, Loader, AlertCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import {MapContainer, TileLayer, Marker, Popup} from 'react-leaflet';
+import 'leaflet/dist/leaflet.css'
 
 const Productos = () => {
   const [productos, setProductos] = useState([]);
@@ -33,11 +35,13 @@ const Productos = () => {
     const descripcion = document.getElementById('descripcion').value;
     const imagen_url = document.getElementById('imagen_url').value;
     const youtube_id = document.getElementById('youtube_id').value;
-    console.log(nombre, precio, stock, id_categoria, descripcion, imagen_url, youtube_id);
+    const latitud = document.getElementById('latitud').value;
+    const longitud= document.getElementById('longitud').value;
+    console.log(nombre, precio, stock, id_categoria, descripcion, imagen_url, youtube_id, latitud, longitud);
     console.log('datos cargados en el objeto');
     try{
       console.log('Intentando crear producto');
-     const nuevo = await api.post('/productos/crear', {nombre: nombre, precio: precio, stock: stock, id_categoria: id_categoria, descripcion: descripcion, imagen_url: imagen_url, youtube_id: youtube_id});
+     const nuevo = await api.post('/productos/crear', {nombre: nombre, precio: precio, stock: stock, id_categoria: id_categoria, descripcion: descripcion, imagen_url: imagen_url, youtube_id: youtube_id, latitud: latitud, longitud:longitud});
      
      console.log(nuevo);
     }catch(err){
@@ -79,6 +83,8 @@ const Productos = () => {
       <input type="text" placeholder="descripcion" className="border border-slate-300 rounded-lg px-4 py-2 w-1/2 focus:outline-none focus:ring-2 focus:ring-blue-500" id="descripcion" />
       <input type="text" placeholder="url imagen" className="border border-slate-300 rounded-lg px-4 py-2 w-1/3 focus:outline-none focus:ring-2 focus:ring-blue-500" id="imagen_url" />
       <input type="text" placeholder="youtube id" className="border border-slate-300 rounded-lg px-4 py-2 w-1/3 focus:outline-none focus:ring-2 focus:ring-blue-500" id="youtube_id" />
+       <input type="text" placeholder="latitud" className="border border-slate-300 rounded-lg px-4 py-2 w-1/3 focus:outline-none focus:ring-2 focus:ring-blue-500" id="latitud" />
+      <input type="text" placeholder="longitud" className="border border-slate-300 rounded-lg px-4 py-2 w-1/3 focus:outline-none focus:ring-2 focus:ring-blue-500" id="longitud" />
       <button onClick={crearProducto} className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition">
         Crear Producto
       </button>
@@ -90,7 +96,7 @@ const Productos = () => {
         {productos.map((prod) => (
           <div key={prod.id} className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow border border-slate-100 overflow-hidden flex flex-col">
             
-            {/* Imagen del producto */}
+            {/* Imagen del producto o video */}
             <div className="h-48 p-4 bg-white flex items-center justify-center border-b border-slate-50">
 
               {prod.youtube_id ? (
@@ -123,6 +129,26 @@ const Productos = () => {
                   Editar
                 </button>
               </div>
+            </div>
+
+            {/*Sección del mapa*/}
+            <div className= "h-48 w-full border-t border-slate-100  z-0 relative">
+              <MapContainer
+                center={[prod.latitud || 20.997601, prod.longitud || -100.381532]}
+                zoom={13}
+                style={{height: "100%", width: "100%", zIndex:0}}
+              >
+                {/*Este es el servidor de OpenStreetMap que nos regala los mapas gratis*/}
+                <TileLayer
+                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                  attribution= '&copy; OpenStreetMap'
+                />
+              <Marker position={[prod.latitud || 20.997601, prod.longitud || -100.381532]}>
+                <Popup>
+                  Ubicación de: <br /> ¿ <strong>{prod.nombre}</strong>
+                </Popup>
+              </Marker>
+              </MapContainer>
             </div>
           </div>
         ))}
