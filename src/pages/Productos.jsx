@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { api } from '../services/api';
-import { ShoppingBag, Loader, AlertCircle } from 'lucide-react';
+import { ShoppingBag, Loader, AlertCircle, Plus, X, MessageCircle, Share2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import {MapContainer, TileLayer, Marker, Popup} from 'react-leaflet';
 import 'leaflet/dist/leaflet.css'
@@ -41,7 +41,7 @@ const Productos = () => {
     console.log('datos cargados en el objeto');
     try{
       console.log('Intentando crear producto');
-     const nuevo = await api.post('/productos/crear', {nombre: nombre, precio: precio, stock: stock, id_categoria: id_categoria, descripcion: descripcion, imagen_url: imagen_url, youtube_id: youtube_id, latitud: latitud, longitud:longitud});
+     const nuevo = await api.post('/productos/crear', {nombre: nombre, precio: precio, stock: stock, id_categoria: id_categoria, descripcion: descripcion, imagen_url: imagen_url || null, youtube_id: youtube_id || null, latitud: latitud || null, longitud:longitud || null});
      
      console.log(nuevo);
     }catch(err){
@@ -62,6 +62,18 @@ const Productos = () => {
       <AlertCircle /> {error}
     </div>
   );
+
+  const compartirWhatsapp = (producto) =>{
+    const mensaje = `¡producto de la tienda!\n\n ${producto.nombre}\n $${producto.precio}\n\n ¿te interesa?`;
+    const textoCodificado= encodeURIComponent(mensaje);
+    window.open(`https://api.whatsapp.com/send?text=${textoCodificado}`, '_blank');
+  };
+
+  const compartirTwitter = (producto)=>{
+    const mensaje = `¡producto de la tienda!\n\n ${producto.nombre} por solo $${producto.precio}\n\n Vamos a verlooo #InventarioPro`;
+    const textoCodificado = encodeURIComponent(mensaje);
+    window.open(`https://twitter.com/intent/tweet?text=${textoCodificado}`, '_blank');
+  };
 
   return (
     <div>
@@ -149,6 +161,29 @@ const Productos = () => {
                 </Popup>
               </Marker>
               </MapContainer>
+            </div>
+
+              {/* NUEVO: Barra de Redes Sociales */}
+            <div className="pt-3 flex justify-between items-center bg-slate-50 -mx-4 -mb-4 px-4 py-3 rounded-b-xl border-t border-slate-100">
+              <span className="text-xs font-semibold text-slate-500 flex items-center gap-1">
+                <Share2 size={14} /> Compartir:
+              </span>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => compartirWhatsapp(prod)}
+                  className="bg-green-500 hover:bg-green-600 text-white p-2 rounded-full transition shadow-sm"
+                  title="Compartir en WhatsApp"
+                >
+                  <MessageCircle size={16} />
+                </button>
+                <button
+                  onClick={() => compartirTwitter(prod)}
+                  className="bg-black hover:bg-slate-800 text-white p-2 rounded-full transition shadow-sm"
+                  title="Compartir en X (Twitter)"
+                >
+                  <X size={16} />
+                </button>
+              </div>
             </div>
           </div>
         ))}
