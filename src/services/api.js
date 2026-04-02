@@ -1,5 +1,5 @@
-const API_URL = "http://localhost:4000/api"; // Importante colocar la url de tu api
-
+const API_URL = "https://backend-api-fork.onrender.com/api" || "http://localhost:4000/api"; // Importante colocar la url de tu api
+                //* IMPORT.META.ENV.VITE_API_URL((la variable de entorno se declara en vercel))
 export const api = {
   get: async (endpoint) => {
     const token = localStorage.getItem('token');
